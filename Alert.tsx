@@ -3,16 +3,17 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-// ─── Utility ────────────────────────────────────────────────────────────────
+// ─── Utility ─────────────────────────────────────────────────────────────────
 
-/** Drop-in replacement for cn() — merges clsx + tailwind-merge */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// ─── Icons ───────────────────────────────────────────────────────────────────
+// ─── Icons ────────────────────────────────────────────────────────────────────
+// No className prop — size is controlled directly by the parent via width/height.
+// Only stroke color is inherited via `currentColor` (set on the icon wrapper).
 
-const SuccessIcon = ({ className }: { className?: string }) => (
+const SuccessIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -21,7 +22,6 @@ const SuccessIcon = ({ className }: { className?: string }) => (
     strokeWidth={2}
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={cn("shrink-0", className)}
     aria-hidden="true"
   >
     <circle cx="12" cy="12" r="10" />
@@ -29,7 +29,7 @@ const SuccessIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const ErrorIcon = ({ className }: { className?: string }) => (
+const ErrorIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -38,7 +38,6 @@ const ErrorIcon = ({ className }: { className?: string }) => (
     strokeWidth={2}
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={cn("shrink-0", className)}
     aria-hidden="true"
   >
     <circle cx="12" cy="12" r="10" />
@@ -47,7 +46,7 @@ const ErrorIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const WarningIcon = ({ className }: { className?: string }) => (
+const WarningIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -56,7 +55,6 @@ const WarningIcon = ({ className }: { className?: string }) => (
     strokeWidth={2}
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={cn("shrink-0", className)}
     aria-hidden="true"
   >
     <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
@@ -65,7 +63,7 @@ const WarningIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const InfoIcon = ({ className }: { className?: string }) => (
+const InfoIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -74,7 +72,6 @@ const InfoIcon = ({ className }: { className?: string }) => (
     strokeWidth={2}
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={cn("shrink-0", className)}
     aria-hidden="true"
   >
     <circle cx="12" cy="12" r="10" />
@@ -83,7 +80,7 @@ const InfoIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const CloseIcon = ({ className }: { className?: string }) => (
+const CloseIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -92,7 +89,6 @@ const CloseIcon = ({ className }: { className?: string }) => (
     strokeWidth={2}
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={cn("shrink-0", className)}
     aria-hidden="true"
   >
     <path d="M18 6 6 18" />
@@ -100,39 +96,27 @@ const CloseIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// ─── CVA Variants ────────────────────────────────────────────────────────────
+// ─── CVA Variants ─────────────────────────────────────────────────────────────
 
 const alertVariants = cva(
-  // Base styles applied to every variant
   [
-    "relative flex w-full items-start gap-3 rounded-xl border px-4 py-3.5",
-    "text-sm font-medium leading-relaxed",
+    "relative flex w-full items-start gap-3 rounded-xl border",
     "transition-all duration-200",
   ],
   {
     variants: {
       variant: {
-        success: [
-          "border-emerald-200 bg-emerald-50 text-emerald-800",
-          "dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300",
-        ],
-        error: [
-          "border-red-200 bg-red-50 text-red-800",
-          "dark:border-red-800 dark:bg-red-950/50 dark:text-red-300",
-        ],
-        warning: [
-          "border-amber-200 bg-amber-50 text-amber-800",
-          "dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300",
-        ],
-        info: [
-          "border-blue-200 bg-blue-50 text-blue-800",
-          "dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-300",
-        ],
+        // text-black is always applied in the component directly.
+        // These only control border and background.
+        success: "border-emerald-200 bg-emerald-50",
+        error:   "border-red-200 bg-red-50",
+        warning: "border-amber-200 bg-amber-50",
+        info:    "border-blue-200 bg-blue-50",
       },
       size: {
-        sm: "px-3 py-2.5 text-xs",
-        md: "px-4 py-3.5 text-sm",
-        lg: "px-5 py-4 text-base",
+        sm: "px-3 py-2.5",
+        md: "px-4 py-3.5",
+        lg: "px-5 py-4",
       },
     },
     defaultVariants: {
@@ -142,54 +126,88 @@ const alertVariants = cva(
   }
 );
 
-const iconVariants = cva("mt-0.5", {
-  variants: {
-    variant: {
-      success: "text-emerald-500 dark:text-emerald-400",
-      error: "text-red-500 dark:text-red-400",
-      warning: "text-amber-500 dark:text-amber-400",
-      info: "text-blue-500 dark:text-blue-400",
+// Icon wrapper: controls size + color per variant
+const iconWrapperVariants = cva(
+  // flex-shrink-0 keeps icon from squishing; mt aligns with first text line
+  "mt-0.5 shrink-0",
+  {
+    variants: {
+      variant: {
+        success: "text-emerald-500",
+        error:   "text-red-500",
+        warning: "text-amber-500",
+        info:    "text-blue-500",
+      },
+      size: {
+        sm: "w-5 h-5",
+        md: "w-6 h-6",
+        lg: "w-7 h-7",
+      },
     },
-    size: {
-      sm: "size-3.5",
-      md: "size-4",
-      lg: "size-5",
+    defaultVariants: {
+      variant: "info",
+      size: "md",
     },
-  },
-  defaultVariants: {
-    variant: "info",
-    size: "md",
-  },
-});
+  }
+);
 
 const closeBtnVariants = cva(
   [
-    "ml-auto -mr-1 -mt-0.5 rounded-md p-1",
+    "ml-auto -mr-1 -mt-0.5 shrink-0 rounded-md p-1 w-6 h-6",
     "opacity-60 transition-opacity hover:opacity-100",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1",
   ],
   {
     variants: {
       variant: {
-        success: "hover:bg-emerald-100 focus-visible:ring-emerald-400 dark:hover:bg-emerald-900",
-        error: "hover:bg-red-100 focus-visible:ring-red-400 dark:hover:bg-red-900",
-        warning: "hover:bg-amber-100 focus-visible:ring-amber-400 dark:hover:bg-amber-900",
-        info: "hover:bg-blue-100 focus-visible:ring-blue-400 dark:hover:bg-blue-900",
+        success: "hover:bg-emerald-100 focus-visible:ring-emerald-400",
+        error:   "hover:bg-red-100 focus-visible:ring-red-400",
+        warning: "hover:bg-amber-100 focus-visible:ring-amber-400",
+        info:    "hover:bg-blue-100 focus-visible:ring-blue-400",
       },
     },
     defaultVariants: { variant: "info" },
   }
 );
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+const textSizeVariants = cva("", {
+  variants: {
+    size: {
+      sm: "text-xs",
+      md: "text-sm",
+      lg: "text-base",
+    },
+  },
+  defaultVariants: { size: "md" },
+});
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export interface AlertLinkProps {
+  /** The visible label for the link */
+  label: string;
+  /** The href/URL the link navigates to */
+  href: string;
+  /** Optional target — defaults to "_self" */
+  target?: React.HTMLAttributeAnchorTarget;
+}
 
 export interface AlertProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof alertVariants> {
-  /** Main alert message */
-  message: string;
-  /** Optional longer description rendered below the message */
+  /** Optional primary heading — bold when messageBold is true */
+  message?: string;
+  /** Whether to render message in bold (default: true) */
+  messageBold?: boolean;
+  /** Optional supporting description */
   description?: string;
+  /** Whether to render description in bold (default: false) */
+  descriptionBold?: boolean;
+  /**
+   * Optional link rendered below the description / message.
+   * Provide `{ label, href }` to show it.
+   */
+  link?: AlertLinkProps;
   /**
    * Override the default icon.
    * - Pass a `ReactElement` to use a custom icon.
@@ -201,54 +219,75 @@ export interface AlertProps
   dismissible?: boolean;
   /** Callback fired when the dismiss button is clicked */
   onDismiss?: () => void;
-  // className is inherited from React.HTMLAttributes<HTMLDivElement> — no re-declaration needed
+  // className is inherited from React.HTMLAttributes<HTMLDivElement>
 }
 
-// ─── Icon map ────────────────────────────────────────────────────────────────
+// ─── Icon map ─────────────────────────────────────────────────────────────────
 
 const DEFAULT_ICONS = {
   success: SuccessIcon,
-  error: ErrorIcon,
+  error:   ErrorIcon,
   warning: WarningIcon,
-  info: InfoIcon,
+  info:    InfoIcon,
 } as const;
 
-// ─── Component ───────────────────────────────────────────────────────────────
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
   (
     {
-      variant = "info",
-      size = "md",
+      variant       = "info",
+      size          = "md",
       message,
+      messageBold   = true,
       description,
+      descriptionBold = false,
+      link,
       icon,
-      dismissible = false,
+      dismissible   = false,
       onDismiss,
       className,
       ...rest
     },
     ref
   ) => {
-    // Normalise variant: VariantProps types it as string | null | undefined,
-    // but our destructuring default guarantees it is one of the four keys at runtime.
+    // Resolve variant safely — VariantProps allows null | undefined
     const resolvedVariant = (variant ?? "info") as keyof typeof DEFAULT_ICONS;
-    const IconComponent = DEFAULT_ICONS[resolvedVariant];
-    const iconClass = iconVariants({ variant: resolvedVariant, size });
+    const resolvedSize    = size ?? "md";
 
-    // Resolve which icon to render
+    const IconComponent = DEFAULT_ICONS[resolvedVariant];
+
     const renderIcon = () => {
       if (icon === false) return null;
-      if (icon !== undefined) return <span className={iconClass}>{icon}</span>;
-      return <IconComponent className={iconClass} />;
+
+      const wrapperClass = iconWrapperVariants({
+        variant: resolvedVariant,
+        size: resolvedSize,
+      });
+
+      if (icon !== undefined) {
+        return <span className={wrapperClass}>{icon}</span>;
+      }
+
+      return (
+        <span className={wrapperClass}>
+          <IconComponent />
+        </span>
+      );
     };
+
+    const baseSizeClass = textSizeVariants({ size: resolvedSize });
 
     return (
       <div
         ref={ref}
         role="alert"
         aria-live="polite"
-        className={cn(alertVariants({ variant: resolvedVariant, size }), className)}
+        className={cn(
+          alertVariants({ variant: resolvedVariant, size: resolvedSize }),
+          "text-black", // always black text regardless of variant
+          className
+        )}
         {...rest}
       >
         {/* Icon */}
@@ -256,11 +295,54 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <p className="font-semibold leading-snug">{message}</p>
+          {/* Message */}
+          {message && (
+            <p
+              className={cn(
+                baseSizeClass,
+                "leading-snug",
+                messageBold ? "font-semibold" : "font-normal"
+              )}
+            >
+              {message}
+            </p>
+          )}
+
+          {/* Description */}
           {description && (
-            <p className="mt-0.5 font-normal opacity-80 leading-relaxed">
+            <p
+              className={cn(
+                baseSizeClass,
+                "leading-relaxed",
+                message ? "mt-0.5" : "",
+                descriptionBold ? "font-semibold" : "font-normal"
+              )}
+            >
               {description}
             </p>
+          )}
+
+          {/* Optional link */}
+          {link && (
+            <a
+              href={link.href}
+              target={link.target ?? "_self"}
+              rel={
+                link.target === "_blank" ? "noopener noreferrer" : undefined
+              }
+              className={cn(
+                baseSizeClass,
+                "mt-1 inline-block font-medium underline underline-offset-2",
+                "hover:opacity-70 transition-opacity",
+                // link color matches the variant accent
+                resolvedVariant === "success" && "text-emerald-700",
+                resolvedVariant === "error"   && "text-red-700",
+                resolvedVariant === "warning" && "text-amber-700",
+                resolvedVariant === "info"    && "text-blue-700"
+              )}
+            >
+              {link.label}
+            </a>
           )}
         </div>
 
@@ -272,7 +354,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
             onClick={onDismiss}
             className={closeBtnVariants({ variant: resolvedVariant })}
           >
-            <CloseIcon className="size-3.5" />
+            <CloseIcon />
           </button>
         )}
       </div>
