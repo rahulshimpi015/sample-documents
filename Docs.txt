@@ -1,0 +1,123 @@
+Update inputVariants base classes — increase height to fit label + text:
+
+`h-14 w-full px-4 pt-6 pb-2 rounded-lg box-border border-1 bg-white transition outline-none
+placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50
+peer focus:border-2 duration-250 font-medium`,
+
+Update label classes only — float to top-left on focus/filled:
+
+className={`${
+  variant === 'error' ? 'text-[#BF263A]' : 'text-[#606776]'
+} pointer-events-none absolute left-4 z-10 origin-left
+top-1/2 -translate-y-1/2
+transition-all duration-200 font-semibold text-base
+peer-focus:top-3 peer-focus:translate-y-0 peer-focus:text-sm peer-focus:font-semibold
+peer-not-placeholder-shown:top-3 peer-not-placeholder-shown:translate-y-0 peer-not-placeholder-shown:text-sm`}
+
+
+
+// Change this:
+className={cn(inputVariants({ variant }), isPasswordField ? 'pr-11' : '', className)}
+
+// To this:
+className={cn(inputVariants({ variant }), isPasswordField ? 'pr-11' : '', 'peer', className)}
+
+
+ Missing pt-6 pb-2 and h-14 in inputVariants — For the focused design from your screenshot, the input needs extra height and padding to show label + cursor:
+
+`h-14 w-full px-4 pt-6 pb-2 rounded-lg ...` // replace h-13
+
+
+Corrected changes:
+
+// inputVariants base — taller input, padding for label + cursor
+`h-16 w-full px-4 pt-5 pb-2 rounded-lg box-border border-1 bg-white transition outline-none
+placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50
+peer focus:border-2 duration-250 font-medium`
+
+// Label — stays top-left always, no shrinking
+className={`${
+  variant === 'error' ? 'text-[#BF263A]' : 'text-[#606776]'
+} pointer-events-none absolute left-4 top-3 z-10 font-semibold text-base`}
+
+
+
+
+
+import { useState, type ReactNode, type Ref } from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@/utils/cn';
+import Eye from '@/assets/images/eye.svg';
+import EyeOff from '@/assets/images/eye-off.svg';
+import Button from '../button';
+
+const inputVariants = cva(
+  `h-16 w-full px-4 pt-5 pb-2 rounded-lg box-border border-1 bg-white transition outline-none
+  placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50
+  peer focus:border-2 duration-250 font-medium`,
+  {
+    variants: {
+      variant: {
+        default: 'border-[#606776]',
+        error: 'border-[#BF263A] focus:ring-red-200',
+        success: 'border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-500/20',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  }
+);
+
+type InputProps = React.InputHTMLAttributes<HTMLInputElement> &
+  VariantProps<typeof inputVariants> & {
+    ref?: Ref<HTMLInputElement>;
+    label?: ReactNode;
+    id?: string;
+  };
+
+export default function Input({ type, className, ref, variant, label, id, ...props }: InputProps) {
+  const [passwordShow, setPasswordShow] = useState(false);
+
+  const togglePassword = () => {
+    setPasswordShow((prev) => !prev);
+  };
+
+  const isPasswordField = type?.toLocaleLowerCase() === 'password';
+  const inputType = passwordShow ? 'text' : type;
+
+  return (
+    <div className="relative flex w-full flex-col gap-4">
+      <input
+        type={inputType}
+        ref={ref}
+        id={id}
+        className={cn(inputVariants({ variant }), isPasswordField ? 'pr-11' : '', 'peer', className)}
+        placeholder=" "
+        {...props}
+      />
+      {isPasswordField && (
+        <Button
+          variant="ghost"
+          className="absolute right-0"
+          onClick={togglePassword}
+        >
+          <img
+            src={passwordShow ? EyeOff : Eye}
+            alt={passwordShow ? 'eye-off' : 'eye'}
+          />
+        </Button>
+      )}
+      {label && (
+        <label
+          htmlFor={id}
+          className={`${
+            variant === 'error' ? 'text-[#BF263A]' : 'text-[#606776]'
+          } pointer-events-none absolute left-4 top-3 z-10 font-semibold text-base`}
+        >
+          {label}
+        </label>
+      )}
+    </div>
+  );
+}
