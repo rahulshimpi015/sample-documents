@@ -1,0 +1,56 @@
+{/* Outer Main Layout */}
+<div className="
+  flex flex-col w-full
+
+  {/* Mobile */}
+  items-start min-h-[852px]
+
+  {/* Tablet (md = 768px) */}
+  md:items-center md:px-[72px] md:py-[128px] md:gap-[100px] md:self-stretch md:flex-1 md:basis-0
+
+  {/* Desktop (xl = 1280px) */}
+  xl:px-[120px] xl:py-[128px] xl:gap-[100px] xl:justify-center
+">
+
+  {/* Inner Layout */}
+  <div className="
+    flex flex-col
+
+    {/* Mobile */}
+    p-6 gap-[40px] items-center flex-1 basis-0 self-stretch
+
+    {/* Tablet */}
+    md:w-[480px] md:h-[815px] md:justify-between md:items-center md:p-0
+
+    {/* Desktop */}
+    xl:w-[480px] xl:h-auto xl:justify-center xl:gap-[64px]
+  ">
+
+    {/* Your content here */}
+
+  </div>
+
+</div>
+
+
+
+
+
+============================
+<div className="flex flex-col w-full items-start min-h-[852px]
+  md:items-center md:px-[72px] md:py-[128px] md:gap-[100px] md:self-stretch md:flex-1 md:basis-0
+  xl:px-[120px] xl:py-[128px] xl:gap-[100px] xl:justify-center">
+
+  <div className="flex flex-col p-6 gap-[40px] items-center flex-1 basis-0 self-stretch
+    md:w-[480px] md:h-[815px] md:justify-between md:items-center md:p-0
+    xl:w-[480px] xl:h-auto xl:justify-center xl:gap-[64px]">
+
+    {/* Your content here */}
+
+  </div>
+
+</div>
+
+
+=================
+
